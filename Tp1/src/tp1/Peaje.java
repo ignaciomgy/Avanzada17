@@ -1,9 +1,17 @@
 package tp1;
 
 public class Peaje {
-
 	private String lugar;
 	private double importe;
+
+	public Peaje(){}
+	
+	public Peaje(String lugar, double importe) {
+		super();
+		this.lugar = lugar;
+		this.importe = importe;
+	}
+	
 	public String getLugar() {
 		return lugar;
 	}

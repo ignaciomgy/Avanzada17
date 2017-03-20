@@ -1,7 +1,12 @@
 package tp1;
 import java.util.Scanner;
 import java.util.regex.Pattern;
+
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.Random;
 
 public class main {
@@ -18,31 +23,35 @@ public class main {
 	static double[] costoss = {2500.25, 3685.99, 9500.00, 8500.00, 12600.00};
 	
 	static Viajes[] viajes;
+	static Peaje[] peajes;
 	
 	
 	public static void main(String[] args) {
-		nroViaje = 0;
+		
+		/*nroViaje = 0;
 		cargarPeones();
 		cargarCamiones();
 		
 		cargarViaje();
 
 		mostrarPeones();
-		
+		*/
 
+  
+		Calendar fecha = Calendar.getInstance();
+		
+		System.out.println(fecha.get(Calendar.MONTH)+1);
+		 
+		    //System.out.println(gc.get(GregorianCalendar.YEAR) + (m < 10 ? "0" + mm : mm) + (d < 10 ? "0" + dd : dd));
+		
 		
 	}
 
-/*
-	Cada viaje es numerado de forma automática y consecutiva, registrándose en cada uno la fecha de partid
-	(fecha del sistema), el peso total en kilos transportado, los peones que fuesen necesarios, si se requiere /
-	o no custodia satelital, el costo básico del viaje, el vehículo con el cual se llevará a cabo y los peajes 
-	abonados durante el trayecto. De cada peaje abonado, se conoce el lugar y el importe correspondiente. */
-	
+
 	private static void cargarViaje() {
 		
 		System.out.println("Ingrese el peso total a transportar en kilogramos.");
-		scn.nextDouble();
+		double peso = scn.nextDouble();
 		
 		System.out.println("Necesita peones para el viaje?. Y - N");
 		String choise = scn.nextLine();
@@ -50,10 +59,98 @@ public class main {
 			seleccionarPeones();	
 		}
 		
+		System.out.println("Ingrese Kms a recorrer en el viaje.");
+		double kms = scn.nextDouble();
+		
+		System.out.println("Desea contratar la custodia satelital?. Y -N");
+		boolean custodia = scn.nextBoolean();
+		
+		System.out.println("Ingrese el costo basico del viaje.");
+		double costo = scn.nextDouble();
+		
+		Camion camionElegido = seleccionarVehiculo(peso);
+		
+		cargarPeajes();
+		 //ViajeLargo vl = new Viaje(nroViaje, fechaHoy, peso, peones, custodia, costo, camionElegido, peajes);
+		if ( kms > 1000 ) {
+			Calendar fechaLLegada = Calendar.getInstance();
+			
+			System.out.println("Ingrese la fecha prevista de llegada. Ej: dd/mm/aaaa");
+			String fecha = scn.nextLine();
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("fecha", Locale.US);
+			//fechaLLegada.setTime(sdf.parse("fecha"));
+			
+			
+			
+			
+			System.out.println("Ingrese las localidades visitadas en el viaje.");
+			
+		}
+		else 
+		{
+			
+		}
 		
 		
 	}
 
+
+
+	private static void cargarPeajes() {
+		boolean cargar = true;
+		int i = 0;
+		while (cargar) {
+			System.out.println("______PEAJES________________________________");
+			System.out.println("Ingrese el lugar del peaje a cargar al viaje.");
+			String lugar = scn.nextLine();
+			System.out.println("Ingrese el importe del peaje.");
+			double costo = scn.nextDouble();
+			
+			Peaje p = new Peaje(lugar, costo);
+			peajes[i] = p;
+			i++;
+			
+			System.out.println("Desea cargar un nuevo peaje ? Y - N");
+			if ((scn.nextLine()).equals("N")) {
+				cargar = false;
+			}
+		}
+	}
+
+
+	private static Camion seleccionarVehiculo(double peso) {
+		System.out.println("___________CAMIONES____DISPONIBLES__________________________");
+		Camion ca = new Camion();
+		boolean seleccion = false;
+		
+		for(Camion c: camiones) {
+			if (c.isDisponible() && c.getCapacidad() >= peso) {
+				System.out.println("Patente del Camion: " + c.getPatente());
+				System.out.println("Año de patentamiento: " + c.getAnioPatentamiento());
+				System.out.println("Capacidad de carga: " + c.getCapacidad());
+			}
+		}
+		
+		while (!seleccion) {
+			System.out.println("Ingrese la patente del vehiculo sleccionado.");
+			String pat = scn.nextLine();
+			
+			for(int i =0 ; i< camiones.length; i++) {
+				if ((camiones[i].getPatente()).equals(pat)) {
+					ca = camiones[i];
+					seleccion = true;
+				}
+			}
+			
+			if(!seleccion) {
+				System.out.println("No se ha encontrado dicho vehiculo. Ingrese una patente existente.");
+				scn.nextLine();
+			}
+		}
+		
+		return ca;
+	}
 
 
 	private static void seleccionarPeones() {
