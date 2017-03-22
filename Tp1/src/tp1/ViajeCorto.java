@@ -1,7 +1,20 @@
 
 package tp1;
 
-public class ViajeCorto {
+import java.util.Calendar;
+
+public class ViajeCorto extends Viajes {
+
+	public ViajeCorto(int nroViaje, Calendar fechaPartida, double peso, Peon[] peones, boolean custodiaSatelital,
+			double costo, Camion vehiculo, Peaje[] peajes, String opcion) {
+		super(nroViaje, fechaPartida, peso, peones, custodiaSatelital, costo, vehiculo, peajes);
+		
+		if (opcion.equals("E") || opcion.equals("e")) {
+			setEfectivo(true);
+		} else {
+			setEfectivo(false);
+		}
+	}
 
 	private boolean efectivo;
 

@@ -4,8 +4,10 @@ import java.util.regex.Pattern;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Random;
 
@@ -28,22 +30,14 @@ public class main {
 	
 	public static void main(String[] args) {
 		
-		/*nroViaje = 0;
+		nroViaje = 0;
 		cargarPeones();
 		cargarCamiones();
 		
 		cargarViaje();
 
 		mostrarPeones();
-		*/
-
-  
-		Calendar fecha = Calendar.getInstance();
-		
-		System.out.println(fecha.get(Calendar.MONTH)+1);
-		 
-		    //System.out.println(gc.get(GregorianCalendar.YEAR) + (m < 10 ? "0" + mm : mm) + (d < 10 ? "0" + dd : dd));
-		
+	
 		
 	}
 
@@ -70,31 +64,79 @@ public class main {
 		
 		Camion camionElegido = seleccionarVehiculo(peso);
 		
-		cargarPeajes();
-		 //ViajeLargo vl = new Viaje(nroViaje, fechaHoy, peso, peones, custodia, costo, camionElegido, peajes);
-		if ( kms > 1000 ) {
-			Calendar fechaLLegada = Calendar.getInstance();
-			
-			System.out.println("Ingrese la fecha prevista de llegada. Ej: dd/mm/aaaa");
-			String fecha = scn.nextLine();
-			
-			SimpleDateFormat sdf = new SimpleDateFormat("fecha", Locale.US);
-			//fechaLLegada.setTime(sdf.parse("fecha"));
-			
-			
-			
-			
-			System.out.println("Ingrese las localidades visitadas en el viaje.");
+		
+
+		if ( kms > 1000 ) 
+		{
+			cargarPeajes();
+			cargarViajeLargo(nroViaje, fechaHoy, peso, peones, custodia, costo, camionElegido, peajes);
 			
 		}
 		else 
 		{
+			cargarViajeCorto(nroViaje, fechaHoy, peso, peones, custodia, costo, camionElegido, peajes);
 			
 		}
 		
+		nroViaje++;
 		
 	}
 
+
+
+	private static void cargarViajeCorto(int nroViaje2, Calendar fechaHoy2, double peso, Peon[] peones2,
+			boolean custodia, double costo, Camion camionElegido, Peaje[] peajes2) {
+		
+		System.out.println("Desea abonar el viaje con Cheque o en Efectivo ?. C - E.");
+		String op = scn.nextLine();
+		
+		if (op.equals("E") || op.equals("e")) {
+			costo = costo - (costo*0.05);
+		} 
+		
+		viajes[nroViaje] = new ViajeCorto(nroViaje2, fechaHoy2, peso, peones2, custodia, costo, camionElegido, peajes2, op);
+
+	}
+
+
+	private static void cargarViajeLargo(int nroViaje2, Calendar fechaHoy2, double peso, Peon[] peones2, boolean custodia, double costo, Camion camionElegido, Peaje[] peajes2) {
+		ArrayList<String> localidades = new ArrayList<String>();
+		int i = 0;
+		Calendar fechaLLegada = Calendar.getInstance();
+		
+		System.out.println("Ingrese la fecha prevista de llegada. Ej: dd/mm/aaaa");
+		String fechaE = scn.nextLine();
+		String[] fechaL = fechaE.split("/");		
+		
+		int dia = Integer.valueOf(fechaL[0]);
+		int mes = Integer.valueOf(fechaL[1])-1;
+		int anio = Integer.valueOf(fechaL[2]);
+		
+		fechaLLegada.set(Calendar.DAY_OF_MONTH, dia);
+		fechaLLegada.set(Calendar.MONTH, mes);
+		fechaLLegada.set(Calendar.YEAR, anio);
+
+		boolean fin = true;
+		
+		while (fin) {
+			System.out.println("Ingrese las localidades visitadas en el viaje.");
+			String loc = scn.nextLine();
+			localidades.add(loc);
+			
+			
+			System.out.println("Desea cargar otra localidad?. Y - N");
+			String choice = scn.nextLine();	
+			if (choice.equals("N") || choice.equals("n")) {
+				fin = false;
+			}
+			
+			i++;
+			
+		}
+		
+		viajes[nroViaje] = new ViajeLargo(nroViaje2, fechaHoy2, peso, peones2, custodia, costo, camionElegido,  peajes2, fechaLLegada, localidades);
+		
+	}
 
 
 	private static void cargarPeajes() {
@@ -154,12 +196,11 @@ public class main {
 
 
 	private static void seleccionarPeones() {
-		Peon[] peonesParaViaje;
 		boolean masPeones = true;
 		mostrarPeones();
-		System.out.println("Ingrese el CUIL a seleccionar.");
 		
 		while(masPeones) {
+			System.out.println("Ingrese el CUIL a seleccionar.");
 			long cuil = scn.nextLong();
 			agregarPeonaAViaje(cuil);
 			System.out.println("Necesita peones para el viaje?. Y - N");

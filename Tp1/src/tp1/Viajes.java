@@ -2,7 +2,7 @@ package tp1;
 
 import java.util.Calendar;
 
-public class Viajes {
+public abstract class Viajes {
 
 	protected int nroViaje;
 	protected Calendar fechaPartida;
@@ -12,6 +12,20 @@ public class Viajes {
 	protected double costo;
 	protected Camion vehiculo;
 	protected Peaje[] peajes;
+	
+	
+	public Viajes(int nroViaje, Calendar fechaPartida, double peso, Peon[] peones, boolean custodiaSatelital,
+			double costo, Camion vehiculo, Peaje[] peajes) {
+		super();
+		this.nroViaje = nroViaje;
+		this.fechaPartida = fechaPartida;
+		this.peso = peso;
+		this.peones = peones;
+		this.custodiaSatelital = custodiaSatelital;
+		this.costo = costo;
+		this.vehiculo = vehiculo;
+		this.peajes = peajes;
+	}
 	
 	public int getNroViaje() {
 		return nroViaje;
