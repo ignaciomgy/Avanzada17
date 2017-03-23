@@ -31,18 +31,52 @@ public class main {
 	public static void main(String[] args) {
 		
 		nroViaje = 0;
+		//b
 		cargarPeones();
+		
+		//c
 		cargarCamiones();
 		
+		//d
 		cargarViaje();
 
-		mostrarPeones();
+		//e
+		System.out.println("Ingrese un numero de viaje a modificar.");
+		int n = scn.nextInt();
+		modificarViaje(n);
+		
 	
 		
 	}
 
 
+	private static void modificarViaje(int n) {
+		boolean encontrado = false;
+		
+		for (int i=0; i < viajes.length; i++) {
+			if ( (viajes[i].getNroViaje()) == i ) {
+				modificarViaje2(viajes[i]);
+				encontrado = true;
+			}
+		}
+
+	}
+
+
+	private static void modificarViaje2(Viajes viajes2) {
+		Camion c = seleccionarVehiculo(viajes2.getPeso());
+		Peon[] peonV = null;
+		
+		peonV = seleccionarPeones(peonV);
+		
+		viajes2.setPeones(peonV);
+		viajes2.setVehiculo(c);
+		
+	}
+
+
 	private static void cargarViaje() {
+		Peon[] peonesV = null;
 		
 		System.out.println("Ingrese el peso total a transportar en kilogramos.");
 		double peso = scn.nextDouble();
@@ -50,11 +84,11 @@ public class main {
 		System.out.println("Necesita peones para el viaje?. Y - N");
 		String choise = scn.nextLine();
 		if (choise.equals("Y") || choise.equals("y")) {
-			seleccionarPeones();	
+			peonesV = seleccionarPeones(peonesV);	
 		}
 		
-		System.out.println("Ingrese Kms a recorrer en el viaje.");
-		double kms = scn.nextDouble();
+		System.out.println("Realizar un Viaje Corto o Larga ?. C - L");
+		String tv = scn.nextLine();
 		
 		System.out.println("Desea contratar la custodia satelital?. Y -N");
 		boolean custodia = scn.nextBoolean();
@@ -66,7 +100,7 @@ public class main {
 		
 		
 
-		if ( kms > 1000 ) 
+		if ( tv.equals("L") || tv.equals("l")) 
 		{
 			cargarPeajes();
 			cargarViajeLargo(nroViaje, fechaHoy, peso, peones, custodia, costo, camionElegido, peajes);
@@ -195,14 +229,16 @@ public class main {
 	}
 
 
-	private static void seleccionarPeones() {
+	private static Peon[] seleccionarPeones(Peon[] peonesDeViaje) {
 		boolean masPeones = true;
+		int i =0;
 		mostrarPeones();
 		
 		while(masPeones) {
 			System.out.println("Ingrese el CUIL a seleccionar.");
 			long cuil = scn.nextLong();
-			agregarPeonaAViaje(cuil);
+			peonesDeViaje[i] = agregarPeonaAViaje(cuil);
+			i++;
 			System.out.println("Necesita peones para el viaje?. Y - N");
 			String choise = scn.nextLine();
 			if (choise.equals("Y") || choise.equals("y")) {
@@ -213,13 +249,21 @@ public class main {
 			
 		}
 		
-		
+		return peonesDeViaje;
 		
 	}
 
-	private static void agregarPeonaAViaje(long cuil) {
-		// TODO Auto-generated method stub
+	private static Peon agregarPeonaAViaje(long cuil) {
+		Peon p = new Peon();
 		
+		for ( int i =0; i<peones.length; i++) {
+			if ((peones[i].getCuil()) == cuil ) {
+				p = peones[i];
+			}
+		}
+		
+		return p;
+
 	}
 
 	private static void mostrarPeones() {
@@ -318,5 +362,6 @@ public class main {
 		
 		return patente;		
 	}
+	
 
 }
