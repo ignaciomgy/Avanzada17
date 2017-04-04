@@ -2,6 +2,7 @@ package tp1;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import com.sun.glass.events.KeyEvent;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,7 +46,85 @@ public class main {
 		int n = scn.nextInt();
 		modificarViaje(n);
 		
+		//f
+		registrarLlegada();
 	
+		//g
+		listadoPorCostoAzar();
+		
+		
+	}
+
+
+	private static void listadoPorCostoAzar() {
+		
+		double num = (double)(rnd.nextDouble() * 999 + 100);
+		System.out.println("__________________________________________________________________________");
+		System.out.println("Listado de Viajes que superan un costo total de: " + num );
+		System.out.println("__________________________________________________________________________");
+		System.out.println("Nro de Viaje | Fecha de Salida | Patente | Kgs de Transporte | Costo Total");
+				
+		for (int i = 0; i < viajes.length; i++) {
+			double costoTotal = caldularCostoTotal(viajes[i]);
+			
+			if (costoTotal > num) {
+				System.out.println(viajes[i].getNroViaje() + " | " + viajes[i].getFechaPartida() + " | " + (viajes[i].getVehiculo()).getPatente() + " | " + viajes[i].getPeso() + " | " + costoTotal);
+			}
+		}
+		
+		System.out.println("__________________________________________________________________________");
+	}
+
+
+	private static double caldularCostoTotal(Viajes viajes2) {
+		double costo = viajes2.getCosto();
+		Peaje[] p = viajes2.getPeajes();
+		
+		for (int i=0; i< p.length; i++) {
+			costo = costo + p[i].getImporte(); 
+		}
+
+		return costo;
+	}
+
+
+	private static void registrarLlegada() {
+		System.out.println("Ingrese un numero de viaje para registrar su llegada.");
+		int n = scn.nextInt();
+		int i = 0;
+		boolean noEnc = false;
+		
+		
+		do {
+			while (!noEnc) {
+				if (((viajes[i].getNroViaje()) == n) && (viajes[i] instanceof ViajeLargo)) {
+					noEnc = true;
+					
+					Calendar fechaLLegada = Calendar.getInstance();
+					
+					System.out.println("Ingrese la fecha y hora de llegada. Ej: dd/mm/aaaa hh:mm");
+					String s = scn.nextLine();
+				
+					int dia = Integer.valueOf(s.substring(0, 2));
+					int mes = Integer.valueOf(s.substring(3,5));
+					int anio = Integer.valueOf(s.substring(6,10));
+					int hora = Integer.valueOf(s.substring(11,13));
+					int min = Integer.valueOf(s.substring(14,16));
+					
+					fechaLLegada.set(Calendar.DAY_OF_MONTH, dia);
+					fechaLLegada.set(Calendar.MONTH, mes);
+					fechaLLegada.set(Calendar.YEAR, anio);
+					fechaLLegada.set(Calendar.HOUR, hora);
+					fechaLLegada.set(Calendar.MINUTE, min);				
+					
+					((ViajeLargo)viajes[i]).setFechaLlegada(fechaLLegada);
+					
+				}
+			}
+			
+			if (!noEnc) System.out.println("Numero de viaje no encontrado. Reingrese un numero valido.");
+		} while (scn.nextLine().equals(KeyEvent.VK_ESCAPE));
+		
 		
 	}
 
